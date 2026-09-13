@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session Protocol — xxKreyKinxx</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12141a;
+    --surface:#1b1f27;
+    --surface-2:#20242d;
+    --line:#2c313c;
+    --ink:#e8e6df;
+    --ink-dim:#9aa0ab;
+    --brass:#c9a227;
+    --brass-dim:#8a742a;
+    --teal:#4f7d77;
+    --red:#b8503f;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  /* Hero */
+  header.hero{
+    padding:72px 0 48px;
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--brass);
+    letter-spacing:0.02em;
+    margin:0 0 14px;
+  }
+  h1{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:900;
+    font-size:clamp(44px, 9vw, 76px);
+    line-height:0.95;
+    margin:0 0 20px;
+    letter-spacing:-0.01em;
+  }
+  .hero-sub{
+    color:var(--ink-dim);
+    font-size:17px;
+    max-width:56ch;
+    margin:0 0 28px;
+  }
+  .stat-row{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  .stat{
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .stat .num{
+    font-size:22px;
+    color:var(--brass);
+    font-weight:600;
+    display:block;
+  }
+  .stat .label{
+    font-size:12px;
+    color:var(--ink-dim);
+  }
+
+  /* Cadence rail */
+  .cadence{
+    padding:56px 0;
+    position:relative;
+  }
+  .cadence-block{
+    display:grid;
+    grid-template-columns:92px 1fr;
+    gap:0 24px;
+    position:relative;
+  }
+  .rail{
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .rail::before{
+    content:'';
+    position:absolute;
+    top:6px;
+    bottom:-40px;
+    width:1px;
+    background:var(--line);
+  }
+  .cadence-block:last-child .rail::before{display:none;}
+  .rail-dot{
+    width:11px;height:11px;
+    border-radius:50%;
+    background:var(--surface);
+    border:2px solid var(--brass);
+    margin-top:4px;
+    z-index:1;
+  }
+  .cadence-body{padding-bottom:52px;}
+  .cadence-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--brass);
+    margin-bottom:6px;
+  }
+  h2{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:32px;
+    margin:0 0 14px;
+    letter-spacing:-0.005em;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:20px 22px;
+    margin-bottom:14px;
+  }
+  .card h3{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink);
+    margin:0 0 10px;
+  }
+  .card p{margin:0;color:var(--ink-dim);font-size:15px;}
+  .card p + p{margin-top:8px;}
+
+  .check-list{list-style:none;margin:0;padding:0;}
+  .check-list li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+    font-size:15px;
+    cursor:pointer;
+  }
+  .check-list li:last-child{border-bottom:none;}
+  .box{
+    flex:none;
+    width:17px;height:17px;
+    margin-top:2px;
+    border:1.5px solid var(--brass-dim);
+    border-radius:3px;
+    position:relative;
+    transition:background .15s, border-color .15s;
+  }
+  .check-list li.done .box{background:var(--brass);border-color:var(--brass);}
+  .check-list li.done .box::after{
+    content:'';
+    position:absolute;
+    left:4px;top:1px;
+    width:5px;height:9px;
+    border-right:2px solid var(--bg);
+    border-bottom:2px solid var(--bg);
+    transform:rotate(40deg);
+  }
+  .check-list li.done .txt{color:var(--ink-dim);text-decoration:line-through;text-decoration-color:var(--line);}
+  .txt strong{color:var(--ink);font-weight:500;}
+
+  .rule-box{
+    border-left:3px solid var(--red);
+    background:var(--surface-2);
+    padding:14px 18px;
+    border-radius:0 6px 6px 0;
+    margin-bottom:14px;
+    font-size:15px;
+  }
+  .rule-box .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--red);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .map-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .map-row:last-child{border-bottom:none;}
+  .map-row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink-dim);}
+  .map-row.bad span:last-child{color:var(--red);}
+  .map-row.good span:last-child{color:var(--teal);}
+
+  .pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px;}
+  .pill{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--teal);
+    border:1px solid var(--teal);
+    padding:3px 9px;
+    border-radius:20px;
+  }
+  .bench-card{margin-bottom:14px;}
+  .bench-card .head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:10px;
+  }
+  .bench-card h3{margin:0;font-size:17px;font-family:'Big Shoulders Display',sans-serif;font-weight:700;letter-spacing:0.01em;}
+  .bench-card .why{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--brass);white-space:nowrap;}
+  .bench-card p{color:var(--ink-dim);font-size:14.5px;margin:8px 0 0;}
+
+  .insight-box{
+    border-left:3px solid var(--teal);
+    background:var(--surface-2);
+    padding:16px 18px;
+    border-radius:0 6px 6px 0;
+    margin:18px 0 0;
+    font-size:15px;
+  }
+  .insight-box .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--teal);
+    display:block;
+    margin-bottom:6px;
+  }
+  .insight-box .weak-row{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    padding:5px 0;
+    color:var(--ink-dim);
+  }
+  .insight-box .weak-row span:first-child{color:var(--ink);}
+  .insight-box .weak-row span:last-child{color:var(--red);}
+
+  .sub-row{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--line);font-family:'IBM Plex Mono',monospace;}
+  .sub-row:last-child{border-bottom:none;}
+  .sub-row span:first-child{color:var(--ink-dim);font-family:'IBM Plex Sans',sans-serif;}
+  .sub-row.weak span:last-child{color:var(--red);}
+  .sub-row.strong span:last-child{color:var(--teal);}
+
+  .pending{
+    border:1px dashed var(--line);
+    border-radius:6px;
+    padding:14px 18px;
+    margin-top:16px;
+    font-size:14px;
+    color:var(--ink-dim);
+  }
+  .pending .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-dim);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .mind-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px 20px;
+    margin-bottom:14px;
+  }
+  .mind-card .tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--teal);
+    display:block;
+    margin-bottom:6px;
+  }
+  .mind-card h3{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-size:20px;
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .mind-card p{margin:0;color:var(--ink-dim);font-size:15px;}
+  .mind-card p+p{margin-top:8px;}
+  .mind-card .quote-line{
+    color:var(--ink);
+    font-style:italic;
+    border-left:2px solid var(--teal);
+    padding-left:12px;
+    margin-top:10px;
+    font-size:14.5px;
+  }
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:32px 0 60px;
+    color:var(--ink-dim);
+    font-size:13px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  @media (max-width:560px){
+    .cadence-block{grid-template-columns:44px 1fr;}
+    .stat-row{gap:20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">Personal training protocol · Valorant · Competitive</p>
+    <h1>Session<br>Protocol</h1>
+    <p class="hero-sub">A daily, weekly, and monthly routine built off your own tracker data — Sentinel/Controller lean, Summit needs work, Viscose benchmark structure, and the mental side of a hard stop before autopilot sets in.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="num">1.16</span><span class="label">last-20 K/D</span></div>
+      <div class="stat"><span class="num">23.7%</span><span class="label">last-20 HS rate</span></div>
+      <div class="stat"><span class="num">50.4%</span><span class="label">Controller WR</span></div>
+      <div class="stat"><span class="num">33.3%</span><span class="label">Summit WR</span></div>
+      <div class="stat"><span class="num">Hare</span><span class="label">Viscose rank · 97%</span></div>
+    </div>
+  </header>
+
+  <div class="cadence">
+
+    <!-- DAILY -->
+    <div class="cadence-block">
+      <div class="rail"><div class="rail-dot"></div></div>
+      <div class="cadence-body">
+        <p class="cadence-tag">Every session</p>
+        <h2>Daily</h2>
+
+        <div class="card">
+          <h3>Before game 1 — warm-up (15–20 min)</h3>
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt"><strong>Kovaak's, 10–12 min</strong> — 2–3 Viscose scenarios, not a full benchmark run</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt"><strong>In-game DM, 5 min</strong> — headshot-only, chase clean hits not kills</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt"><strong>Pick your agent before queueing</strong> — Sage or a Controller, decided before agent select</div></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Between game 1 and game 2 (3–5 min)</h3>
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Step away, breathe, stretch — no aim trainer reset</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Name <strong>one specific death</strong> from the last game — not "played bad," the actual angle or read that was wrong</div></li>
+          </ul>
+          <p style="margin-top:10px;">Can't name one? That's the flag you're already on autopilot — slow down before requeuing.</p>
+        </div>
+
+        <div class="rule-box">
+          <span class="label">Hard stop rule</span>
+          Stop after <strong>3 games</strong>, or immediately after <strong>2 losses in a row under 1.0 K/D</strong> — whichever comes first. No exceptions for "one more."
+        </div>
+
+        <div class="card">
+          <h3>After session</h3>
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">VOD review, <strong>10–15 min</strong> — worst round only, watch positioning not just the death frame</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Log <strong>agent / W-L + K/D / one mistake</strong> somewhere quick</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Actually close the client</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEKLY -->
+    <div class="cadence-block">
+      <div class="rail"><div class="rail-dot"></div></div>
+      <div class="cadence-body">
+        <p class="cadence-tag">Once a week</p>
+        <h2>Weekly</h2>
+        <div class="card">
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Full aim benchmark run — Viscose, or rotate in Voltaic's pack for variety</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Queue Summit or Sunset in unrated/custom specifically to rebuild map knowledge</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Watch a VOD/pro POV on Controller or Initiator — reinforce your best-WR roles</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Review the week's death log — is one cause repeating?</div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Map priority</h3>
+          <div class="map-row good"><span>Breeze</span><span>53.9% WR</span></div>
+          <div class="map-row good"><span>Abyss</span><span>51.9% WR</span></div>
+          <div class="map-row good"><span>Icebox</span><span>50.3% WR</span></div>
+          <div class="map-row bad"><span>Sunset</span><span>44.9% WR</span></div>
+          <div class="map-row bad"><span>Summit</span><span>33.3% WR</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY -->
+    <div class="cadence-block">
+      <div class="rail"><div class="rail-dot"></div></div>
+      <div class="cadence-body">
+        <p class="cadence-tag">Once a month</p>
+        <h2>Monthly</h2>
+        <div class="card">
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Re-pull tracker.gg — compare HS%, role WR, and map WR against this baseline</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Reassess agent pool — is Duelist earning its slot, or fully shift to Sentinel/Controller?</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Full-game POV VOD — start to finish, watch specifically for <em>when</em> attention drops (rounds 15–24 zone)</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENCHMARKS -->
+    <div class="cadence-block">
+      <div class="rail"><div class="rail-dot"></div></div>
+      <div class="cadence-body">
+        <p class="cadence-tag">Diagnostic tool · Kovaak's</p>
+        <h2>Benchmarks</h2>
+        <div class="card">
+          <p>Viscose S2 splits into four skill categories, each with its own subcategories. The point of running it isn't to beat the scores — it's to find which category is weakest <em>relative to the other three</em>. That gap is where your extra reps go this week.</p>
+        </div>
+
+        <div class="card bench-card">
+          <div class="head"><h3>Control Tracking</h3><span class="why">close-range spray control</span></div>
+          <div class="pill-row"><span class="pill">Arm</span><span class="pill">Wrist</span><span class="pill">Fingertip</span><span class="pill">Blending</span></div>
+          <p>Holding your crosshair on a target that's strafing while you're actively spraying. Maps directly to point-blank duels — Spectre/Vandal spray fights where you win or lose based on staying glued to the hitbox, not flicking to it.</p>
+          <div style="margin-top:12px;">
+            <div class="sub-row strong"><span>Arm</span><span>66% avg</span></div>
+            <div class="sub-row weak"><span>Wrist</span><span>40% avg — lowest in category</span></div>
+            <div class="sub-row"><span>Fingertip</span><span>52% avg</span></div>
+            <div class="sub-row"><span>Blending</span><span>50% avg</span></div>
+          </div>
+        </div>
+
+        <div class="card bench-card">
+          <div class="head"><h3>Reactive Tracking</h3><span class="why">re-reads &amp; direction changes</span></div>
+          <div class="pill-row"><span class="pill">Control</span><span class="pill">Speed</span><span class="pill">Reading</span></div>
+          <p>Recovering when a target suddenly juke-cancels or reverses direction. This is the category that shows up when someone strafes out from behind a box mid-fight — if your tracking "breaks" and takes a beat to recover, this is the leak.</p>
+          <div style="margin-top:12px;">
+            <div class="sub-row weak"><span>Control</span><span>17% avg — weakest subcategory overall</span></div>
+            <div class="sub-row strong"><span>Speed</span><span>81% avg</span></div>
+            <div class="sub-row strong"><span>Reading</span><span>91% avg</span></div>
+          </div>
+        </div>
+
+        <div class="card bench-card">
+          <div class="head"><h3>Flick Tech</h3><span class="why">peeker snaps</span></div>
+          <div class="pill-row"><span class="pill">Speed</span><span class="pill">Stability</span><span class="pill">Micro</span><span class="pill">Post-flick</span></div>
+          <p>Snapping cleanly onto a head as it appears — the category most tied to your headshot%. Your last-20 HS rate already jumped to 23.7%; this is the training that keeps pushing that number, not raw tracking.</p>
+          <div style="margin-top:12px;">
+            <div class="sub-row"><span>Speed</span><span>56% avg</span></div>
+            <div class="sub-row"><span>Stability</span><span>58% avg</span></div>
+            <div class="sub-row weak"><span>Micro</span><span>52% avg</span></div>
+            <div class="sub-row strong"><span>Post-flick</span><span>67% avg</span></div>
+          </div>
+        </div>
+
+        <div class="card bench-card">
+          <div class="head"><h3>Dynamic Clicking</h3><span class="why">multi-target trades</span></div>
+          <div class="pill-row"><span class="pill">Reading</span><span class="pill">Precision</span><span class="pill">Linear</span></div>
+          <p>Engaging and cleanly finishing multiple targets in sequence — 2v1s, trading a kill right after your first frag. Directly relevant to Duelist entries specifically, which is your lowest-WR role right now; if this category is your weakest, it may partly explain the Duelist gap.</p>
+          <div style="margin-top:12px;">
+            <div class="sub-row"><span>Reading</span><span>59% avg</span></div>
+            <div class="sub-row strong"><span>Precision</span><span>82% avg</span></div>
+            <div class="sub-row strong"><span>Stability</span><span>67% avg</span></div>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          <span class="label">Priority this week</span>
+          Your Duelist role gap isn't a clicking problem — Dynamic Clicking is your <strong style="color:var(--ink)">strongest</strong> category (69.7% avg). It's controlled tracking that's lagging, in both categories that test it:
+          <div class="weak-row"><span>Air Spectral Easy 85%</span><span>907.54 · 8%</span></div>
+          <div class="weak-row"><span>Controlsphere SuperbAim Viscose Easier</span><span>7,128 · 8%</span></div>
+          <div class="weak-row"><span>Ground Plaza Sparky v3 Easy</span><span>847.35 · 26%</span></div>
+          <div class="weak-row"><span>VT Controlsphere Viscose Easier</span><span>2,503 · 17%</span></div>
+          <p style="margin-top:10px;color:var(--ink-dim);">Run these four before anything else this week. In-game, this shows up as losing spray fights and slow-tracking duels rather than losing the opening flick — worth watching for in your next VOD review.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINDSET -->
+    <div class="cadence-block">
+      <div class="rail"><div class="rail-dot"></div></div>
+      <div class="cadence-body">
+        <p class="cadence-tag">Standing rule</p>
+        <h2>Mindset</h2>
+
+        <div class="mind-card">
+          <span class="tag">Judge decisions, not outcomes</span>
+          <h3>Process over scoreline</h3>
+          <p>A death from a well-timed aggressive read is a correct decision even if it loses the round. A survival from over-holding a passive angle can be a wrong decision even if it wins. Grade each round on whether the call made sense with the information you had — not on the kill feed.</p>
+          <p class="quote-line">"Was that a good read, or did it just work out?" — ask this after every death, win or lose.</p>
+        </div>
+
+        <div class="mind-card">
+          <span class="tag">Catch it before it compounds</span>
+          <h3>Tilt tells</h3>
+          <p>Your data already shows the pattern — a 0.9 K/D loss into a 0.4 K/D loss back to back (Sep 13→14). The behavioral tells usually show up before the scoreline does:</p>
+          <ul class="check-list" style="margin-top:10px;">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Forcing a duel to "make up for" your last death, instead of playing the round in front of you</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Holding a grudge against one specific enemy across rounds</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Typing in chat instead of calling in voice/comms</div></li>
+          </ul>
+          <p style="margin-top:10px;">Any one of these mid-game is a cue to use the hard stop rule early, not wait for game 3.</p>
+        </div>
+
+        <div class="mind-card">
+          <span class="tag">Separate identity from role fit</span>
+          <h3>Reframe Duelist losses</h3>
+          <p>Your Controller and Initiator win rates (50.4%, 50.7%) beat Duelist (44.9%) by a wide margin. A rough game on Reyna isn't evidence you're bad — it's evidence you picked a role that statistically doesn't fit your playstyle as well. Losing on the wrong tool for the job is a pick problem, not a you problem.</p>
+        </div>
+
+        <div class="mind-card">
+          <span class="tag">Reduce variance, not just raise the ceiling</span>
+          <h3>Pre-round routine as an anchor</h3>
+          <p>MVP games (Sep 7, Aug 23, Aug 22) sitting next to sub-1.0 K/D losses means your ceiling is fine — your floor is the problem. A fixed pre-round routine (same crosshair check, same breath, same "what's my role this round" question) keeps baseline execution steady regardless of how the last round went, which raises the floor more than any single mechanical fix will.</p>
+        </div>
+
+        <div class="card">
+          <h3>Autopilot habits</h3>
+          <ul class="check-list">
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Say your <strong>round plan out loud</strong> before it starts — forces active decisions over muscle memory</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Stand up, water, look away — every 2 games, no exceptions</div></li>
+            <li onclick="this.classList.toggle('done')"><div class="box"></div><div class="txt">Vary the warm-up scenario order occasionally so the warm-up itself doesn't go on autopilot</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>xxKreyKinxx // last updated manually — re-run against tracker.gg monthly</footer>
+</div>
+
+</body>
+</html>
